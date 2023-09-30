@@ -13,7 +13,6 @@ class AlertPresenter {
         let alertController = UIAlertController(title: model.title, message: model.message, preferredStyle: .alert)
         
         let action = UIAlertAction(title: model.buttonText, style: .default) { _ in
-            print("nenen")
             model.completion()
         }
         

@@ -14,12 +14,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private let questionsAmount: Int = 10
     private var questionFactory: QuestionFactoryProtocol = QuestionFactory()
     private var currentQuestion: QuizQuestion?
+    private var statisticService: StatisticService?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("Новый вопрос")
         questionFactory.delegate = self
+        statisticService = StatisticServiceImplementation()
         questionFactory.requestNextQuestion()
     }
     
@@ -102,9 +103,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             completion: {
                 self.currentQuestionIndex = 0
                 self.correctAnswers = 0
-                // заново показываем первый вопрос
                 self.questionFactory.requestNextQuestion()
-                print("отработало")
             }
         )
         
@@ -113,7 +112,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     private func showNextQuestionOrResults() {
         if currentQuestionIndex == questionsAmount - 1 { // 1
-            let model = QuizResultsViewModel(title: "Этот раунд окончен!", text: "Ваш результат: \(correctAnswers)/10", buttonText: "Сыграть ещё раз")
+            statisticService?.store(correct: correctAnswers, total: 10)
+            guard let statisticService = statisticService else {
+                return
+            }
+            let accuracy = String(format: "%.2f",statisticService.totalAccuracy)
+            let model = QuizResultsViewModel(title: "Этот раунд окончен!", text: "Ваш результат: \(correctAnswers)/10\nКоличество сыгранных квизов: \(String(describing: statisticService.gamesCount))\nРекорд: \(String(describing: statisticService.bestGame!.correct))/\(String(describing: statisticService.bestGame!.total)) \(String(describing: statisticService.bestGame!.date.dateTimeString))\nСредняя точность: \(accuracy)%", buttonText: "Сыграть ещё раз")
             show(quiz: model)
             
         } else { // 2
