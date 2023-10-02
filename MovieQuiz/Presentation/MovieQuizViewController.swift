@@ -28,7 +28,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         guard let question = question else {
             return
         }
-
+        
         currentQuestion = question
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
@@ -84,9 +84,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         QuizStepViewModel(
-                    image: UIImage(named: model.image) ?? UIImage(),
-                    question: model.text,
-                    questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
+            image: UIImage(named: model.image) ?? UIImage(),
+            question: model.text,
+            questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
     }
     
     private func show(quiz step: QuizStepViewModel) {
@@ -117,12 +117,19 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                 return
             }
             let accuracy = String(format: "%.2f",statisticService.totalAccuracy)
-            let model = QuizResultsViewModel(title: "Этот раунд окончен!", text: "Ваш результат: \(correctAnswers)/10\nКоличество сыгранных квизов: \(String(describing: statisticService.gamesCount))\nРекорд: \(String(describing: statisticService.bestGame!.correct))/\(String(describing: statisticService.bestGame!.total)) \(String(describing: statisticService.bestGame!.date.dateTimeString))\nСредняя точность: \(accuracy)%", buttonText: "Сыграть ещё раз")
+            let model = QuizResultsViewModel(title: "Этот раунд окончен!", text: """
+    Ваш результат: \(correctAnswers)/10\nКоличество сыгранных квизов: \(String(describing:
+    statisticService.gamesCount))\nРекорд: \(String(describing:
+    statisticService.bestGame!.correct))/
+    \(String(describing: statisticService.bestGame!.total)) \(String(describing:
+    statisticService.bestGame!.date.dateTimeString))
+    \nСредняя точность: \(accuracy)%
+    """, buttonText: "Сыграть ещё раз")
             show(quiz: model)
             
         } else { // 2
             currentQuestionIndex += 1
-                    
+            
             questionFactory.requestNextQuestion()
         }
     }
