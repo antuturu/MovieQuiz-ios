@@ -25,7 +25,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
         statisticService = StatisticServiceImplementation()
         showLoadingIndicator()
-        questionFactory.loadData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { // добавил паузу чтобы можно было увидеть индикатор загрузки
+            self.questionFactory.loadData()
+        }
     }
     
     func didReceiveNextQuestion(question: QuizQuestion?) {
@@ -79,10 +81,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         yesButton.isEnabled = false
         noButton.isEnabled = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.yesButton.isEnabled = true
-            self.noButton.isEnabled = true
             self.imageView.layer.borderWidth = 0
             self.showNextQuestionOrResults()
+            self.yesButton.isEnabled = true
+            self.noButton.isEnabled = true
         }
     }
     
@@ -123,11 +125,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             let accuracy = String(format: "%.2f",statisticService.totalAccuracy)
             let model = QuizResultsViewModel(title: "Этот раунд окончен!", text: """
     Ваш результат: \(correctAnswers)/10\nКоличество сыгранных квизов: \(String(describing:
-    statisticService.gamesCount))\nРекорд: \(String(describing:
-    statisticService.bestGame!.correct))/
-    \(String(describing: statisticService.bestGame!.total)) \(String(describing:
-    statisticService.bestGame!.date.dateTimeString))
-    \nСредняя точность: \(accuracy)%
+    statisticService.gamesCount))\nРекорд:\(String(describing:
+    statisticService.bestGame!.correct))/\(String(describing: statisticService.bestGame!.total)) \(String(describing:
+    statisticService.bestGame!.date.dateTimeString))\nСредняя точность: \(accuracy)%
     """, buttonText: "Сыграть ещё раз")
             show(quiz: model)
             
