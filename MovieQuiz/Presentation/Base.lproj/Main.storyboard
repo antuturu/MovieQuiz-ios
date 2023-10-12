@@ -107,17 +107,23 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="mxt-GZ-IPl">
+                                <rect key="frame" x="197" y="438" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
                             <constraint firstItem="xfN-Pm-XPU" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="AvF-Dn-Wtr"/>
+                            <constraint firstItem="mxt-GZ-IPl" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="MBf-9s-ng7"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="xfN-Pm-XPU" secondAttribute="bottom" id="VVo-RF-6B5"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="xfN-Pm-XPU" secondAttribute="trailing" constant="20" id="c0w-ks-1OQ"/>
                             <constraint firstItem="xfN-Pm-XPU" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="jIR-DX-ds7"/>
+                            <constraint firstItem="mxt-GZ-IPl" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="m9O-39-sWt"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="mxt-GZ-IPl" id="AtL-gI-7sw"/>
                         <outlet property="counterLabel" destination="9OZ-Aw-Doh" id="gi0-NR-mdd"/>
                         <outlet property="imageView" destination="Ed5-0J-zKF" id="QqL-rs-FpM"/>
                         <outlet property="noButton" destination="peq-MQ-8Rm" id="tRZ-2N-X0B"/>
@@ -132,7 +138,7 @@
     </scenes>
     <resources>
         <namedColor name="YP Black">
-            <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.10199999809265137" green="0.10599999874830246" blue="0.13300000131130219" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="YP White">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
