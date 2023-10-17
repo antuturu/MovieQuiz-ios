@@ -83,8 +83,6 @@ final class StatisticServiceImplementation: StatisticService {
         self.correct = count
         self.total = amount
         self.gamesCount += 1
-        print(correct)
-        print(total)
         let currentBestGame = GameRecord(correct: correct, total: total, date: Date())
         
         if let previousBestGame = bestGame{
