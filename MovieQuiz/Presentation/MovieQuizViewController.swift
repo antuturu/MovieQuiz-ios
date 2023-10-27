@@ -15,15 +15,13 @@ protocol MovieQuizViewControllerProtocol: AnyObject {
 }
 
 final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol {
-    
-    
-    
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var counterLabel: UILabel!
     @IBOutlet private weak var yesButton: UIButton!
     @IBOutlet private weak var noButton: UIButton!
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
+    
     private var presenter: MovieQuizPresenter!
     
     // MARK: - Lifecycle

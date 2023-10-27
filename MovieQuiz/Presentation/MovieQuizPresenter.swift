@@ -10,14 +10,13 @@ import UIKit
 
 final class MovieQuizPresenter: QuestionFactoryDelegate {
     let questionsAmount: Int = 10
-    private var currentQuestionIndex: Int = 0
     var correctAnswers: Int = 0
     var currentQuestion: QuizQuestion?
     var questionFactory: QuestionFactoryProtocol?
     var statisticService: StatisticService?
     weak var viewController: MovieQuizViewControllerProtocol?
     
-    
+    private var currentQuestionIndex: Int = 0
     
     init(viewController: MovieQuizViewControllerProtocol) {
         self.viewController = viewController
@@ -26,8 +25,6 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         questionFactory?.loadData()
         viewController.showLoadingIndicator()
     }
-    
-    // MARK: - QuestionFactoryDelegate
     
     func didLoadDataFromServer() {
         viewController?.hideLoadingIndicator()
@@ -68,16 +65,6 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         didAnswer(false)
     }
     
-    private func didAnswer(_ isYes: Bool) {
-        guard let currentQuestion = currentQuestion else {
-            return
-        }
-        
-        let givenAnswer = isYes
-        
-        proceedWithAnswer(givenAnswer == currentQuestion.correctAnswer)
-    }
-    
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question = question else {
             return
@@ -88,6 +75,37 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         DispatchQueue.main.async { [weak self] in
             self?.viewController?.show(quiz: viewModel)
         }
+    }
+    
+    private func makeResultsMessage() -> String {
+        statisticService?.store(correct: correctAnswers, total: questionsAmount)
+        guard let statisticService = statisticService else {
+            return ""
+        }
+        guard let bestGame = statisticService.bestGame else {
+            return ""
+        }
+        let totalPlaysCountLine = "Количество сыгранных квизов: \(statisticService.gamesCount)"
+        let currentGameResultLine = "Ваш результат: \(correctAnswers)\\\(questionsAmount)"
+        let bestGameInfoLine = "Рекорд: \(bestGame.correct)\\\(bestGame.total)"
+        + " (\(bestGame.date.dateTimeString))"
+        let averageAccuracyLine = "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
+        
+        let resultMessage = [
+            currentGameResultLine, totalPlaysCountLine, bestGameInfoLine, averageAccuracyLine
+        ].joined(separator: "\n")
+        
+        return resultMessage
+    }
+    
+    private func didAnswer(_ isYes: Bool) {
+        guard let currentQuestion = currentQuestion else {
+            return
+        }
+        
+        let givenAnswer = isYes
+        
+        proceedWithAnswer(givenAnswer == currentQuestion.correctAnswer)
     }
     
     private func proceedToNextQuestionOrResults() {
@@ -113,26 +131,5 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
             self.viewController?.hideImageBorder()
             self.viewController?.blockUnclockButtons(true)
         }
-    }
-    
-    func makeResultsMessage() -> String {
-        statisticService?.store(correct: correctAnswers, total: questionsAmount)
-        guard let statisticService = statisticService else {
-            return ""
-        }
-        guard let bestGame = statisticService.bestGame else {
-            return ""
-        }
-        let totalPlaysCountLine = "Количество сыгранных квизов: \(statisticService.gamesCount)"
-        let currentGameResultLine = "Ваш результат: \(correctAnswers)\\\(questionsAmount)"
-        let bestGameInfoLine = "Рекорд: \(bestGame.correct)\\\(bestGame.total)"
-        + " (\(bestGame.date.dateTimeString))"
-        let averageAccuracyLine = "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
-        
-        let resultMessage = [
-            currentGameResultLine, totalPlaysCountLine, bestGameInfoLine, averageAccuracyLine
-        ].joined(separator: "\n")
-        
-        return resultMessage
     }
 }
